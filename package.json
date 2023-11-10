@@ -1,0 +1,34 @@
+{
+  "name": "@edgepi-cloud/node-red-edgepi-pwm",
+  "version": "1.0.5",
+  "description": "Node-RED node for EdgePi PWM Module",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdgePi-Cloud/node-red-edgepi-pwm.git"
+  },
+  "author": "Josiah Kievit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EdgePi-Cloud/node-red-edgepi-pwm/issues"
+  },
+  "node-red": {
+    "nodes": {
+      "edgepi-pwm": "edgepi-pwm.js"
+    }
+  },
+  "homepage": "https://github.com/EdgePi-Cloud/node-red-edgepi-pwm#readme",
+  "dependencies": {
+    "@edgepi-cloud/edgepi-rpc": "^1.0.10"
+  },
+  "devDependencies": {
+    "node-red": "^2.2.2"
+  },
+  "keywords": [
+    "node-red",
+    "edgepi",
+    "pwm",
+    "edgepi-pwm"
+  ]
+}
