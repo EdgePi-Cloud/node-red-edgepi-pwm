@@ -29,10 +29,10 @@ Configures a PWM port on the EdgePi.
 Example input configuration:
 ```
 msg {
-  "payload": "0",
-  "frequency": "1000",
+  "payload": 0,
+  "frequency": 1000,
   "polarity": "NORMAL",
-  "enabled": "false"
+  "enabled": false
 }
 ```
 
@@ -50,10 +50,10 @@ Values of successfully configured properties.
 Example output:
 ```
 msg {
-  "payload": "0",
+  "payload": 0,
   "pwmPin": "PWM1",
-  "frequency": "1000",
+  "frequency": 1000,
   "polarity": "NORMAL",
-  "enabled": "false"
+  "enabled": false
 }
 ```
