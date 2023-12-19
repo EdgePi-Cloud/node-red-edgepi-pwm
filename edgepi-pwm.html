@@ -1,0 +1,295 @@
+<script type="text/javascript">
+  RED.nodes.registerType("pwm", {
+    category: "EdgePi",
+    color: "#f391aa",
+    defaults: {
+      name: { value: "" },
+      transport: { value: "Local" },
+      pwmPin: { value: "PWM1" },
+      state: { value: "enabled" },
+      frequency: { value: "" },
+      dutyCycle: { value: "" },
+      polarity: { value: "NORMAL" },
+      tcpAddress: { value: "" },
+      tcpPort: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "light.svg",
+    label: function () {
+      return this.name || "pwm";
+    },
+    oneditprepare: function () {
+      const configTransportSelect = document.getElementById(
+        "node-input-transport"
+      );
+      const tcpField = document.querySelector(".form-row.tcp");
+      const pwmPin = document.getElementById("node-input-pwmPin");
+      const PWM1 = document.getElementById("node-input-PWM1");
+      const PWM2 = document.getElementById("node-input-PWM2");
+      const state = document.getElementById("node-input-state");
+      const enabled = document.getElementById("node-input-enabled");
+      const disabled = document.getElementById("node-input-disabled");
+      const polarity = document.getElementById("node-input-polarity");
+      const normal = document.getElementById("node-input-normal");
+      const inversed = document.getElementById("node-input-inversed");
+
+      if (this.pwmPin == "PWM1") {
+        PWM1.checked = true;
+      } else {
+        PWM2.checked = true;
+      }
+
+      if (this.state == "enabled") {
+        enabled.checked = true;
+      } else {
+        disabled.checked = true;
+      }
+
+      if (this.polarity == "NORMAL") {
+        normal.checked = true;
+      } else {
+        inversed.checked = true;
+      }
+
+      function updateEditor() {
+        tcpField.style.display =
+          configTransportSelect.value === "Network" ? "flex" : "none";
+      }
+
+      updateEditor();
+      configTransportSelect.addEventListener("change", updateEditor);
+      PWM1.addEventListener("change", updateEditor);
+      PWM2.addEventListener("change", updateEditor);
+      enabled.addEventListener("change", updateEditor);
+      disabled.addEventListener("change", updateEditor);
+      normal.addEventListener("change", updateEditor);
+      inversed.addEventListener("change", updateEditor);
+    },
+    oneditsave: function () {
+      this.pwmPin = document.getElementById("node-input-PWM1").checked
+        ? "PWM1"
+        : "PWM2";
+      this.state = document.getElementById("node-input-enabled").checked
+        ? "enabled"
+        : "disabled";
+      this.polarity = document.getElementById("node-input-normal").checked
+        ? "NORMAL"
+        : "INVERSED";
+    },
+  });
+</script>
+<script type="text/html" data-template-name="pwm">
+  <style>
+    * {
+      box-sizing: border-box !important;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-row > label {
+      width: 100px;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .form-row.tcp {
+      flex-direction: row;
+      align-items: center;
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+
+    .tcp-address-input {
+      width: 160px !important;
+      margin-left: 100px !important;
+    }
+    .tcp-port-input {
+      width: 60px !important;
+    }
+
+    .tcp-port-label {
+      width: 5px !important;
+      margin: auto 5px;
+    }
+
+    .form-row.pwmPin input[type="radio"],
+    .form-row.state input[type="radio"],
+    .form-row.polarity input[type="radio"] {
+      width: 40px !important;
+    }
+
+    label[for="node-input-PWM1"],
+    label[for="node-input-PWM2"],
+    label[for="node-input-enabled"],
+    label[for="node-input-disabled"],
+    label[for="node-input-normal"],
+    label[for="node-input-inversed"] {
+      width: 60px !important;
+    }
+
+    .form-row.dutyCycle input {
+      width: 70px !important;
+    }
+
+    .form-row.frequency input {
+      width: 110px !important;
+    }
+  </style>
+
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name:</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+
+  <div class="form-row transport">
+    <label for="node-input-transport">RPC Server:</label>
+    <select id="node-input-transport">
+      <option value="Local">Local</option>
+      <option value="Network">Network</option>
+    </select>
+  </div>
+
+  <div class="form-row tcp">
+    <input
+      class="tcp-address-input"
+      type="text"
+      id="node-input-tcpAddress"
+      placeholder="IP Address/ Hostname"
+    />
+    <label class="tcp-port-label" for="node-input-tcpPort">:</label>
+    <input
+      class="tcp-port-input"
+      type="text"
+      id="node-input-tcpPort"
+      placeholder="Port"
+    />
+  </div>
+
+  <div class="form-row pwmPin">
+    <label for="node-input-pwmPin">PWM:</label>
+    <input
+      type="radio"
+      name="pwmPin"
+      id="node-input-PWM1"
+      value="PWM1"
+      checked
+    />
+    <label for="node-input-PWM1">PWM1</label>
+    <input type="radio" name="pwmPin" id="node-input-PWM2" value="PWM2" />
+    <label for="node-input-PWM2">PWM2</label>
+  </div>
+
+  <div class="form-row state">
+    <label for="node-input-state">State:</label>
+    <input
+      type="radio"
+      name="PWMState"
+      id="node-input-enabled"
+      value="enabled"
+      checked
+    />
+    <label for="node-input-enabled">Enabled</label>
+    <input
+      type="radio"
+      name="PWMState"
+      id="node-input-disabled"
+      value="disabled"
+    />
+    <label for="node-input-disabled">Disabled</label>
+  </div>
+
+  <div class="form-row polarity">
+    <label for="node-input-polarity">Polarity:</label>
+    <input
+      type="radio"
+      name="polarity"
+      id="node-input-normal"
+      value="NORMAL"
+      checked
+    />
+    <label for="node-input-normal">Normal</label>
+    <input
+      type="radio"
+      name="polarity"
+      id="node-input-inversed"
+      value="INVERSED"
+    />
+    <label for="node-input-inversed">Inversed</label>
+  </div>
+
+  <div class="form-row frequency">
+    <label for="node-input-frequency">Frequency: </label>
+    <input
+      type="number"
+      id="node-input-frequency"
+      placeholder="1000-10,000"
+      min="1000"
+      max="10000"
+      step="100"
+    />
+  </div>
+
+  <div class="form-row dutyCycle">
+    <label for="node-input-dutyCycle">Duty Cycle (%): </label>
+    <input
+      type="number"
+      id="node-input-dutyCycle"
+      placeholder="0-100"
+      min="0"
+      max="100"
+      step="1"
+    />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="pwm">
+  <p>Configures a PWM port on the EdgePi.</p>
+  <h3>Properties</h3>
+  <dl class="message-properties">
+    <dt>RPC Server</dt>
+    <dd>The connection to your EdgePi's RPC Server.</dd>
+    <dt>PWM</dt>
+    <dd>The PWM Pin to configure on the EdgePi.</dd>
+    <dt>State</dt>
+    <dd>Whether the PWM Pin is enabled or disabled.</dd>
+    <dt>Polarity</dt>
+    <dd>Determines the signal's resting state (high or low).</dd>
+    <dt>Frequency</dt>
+    <dd>Rate at which the PWM completes a cycle.</dd>
+    <dt>Duty Cycle</dt>
+    <dd>Percentage of one cycle in which a signal is active.</dd>
+  </dl>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>msg.payload<span class="property-type">number</span></dt>
+    <dd>
+      The duty cycle.
+    </dd>
+    <dt>msg.frequency<span class="property-type">number</span></dt>
+    <dt>msg.polarity<span class="property-type">string</span></dt>
+    <dt>msg.enabled<span class="property-type">boolean</span></dt>
+  </dl>
+  <h3>Outputs</h3>
+  <p>Values of successfully configured properties.</p>
+  <dl class="message-properties">
+    <dt>msg.payload<span class="property-type">number</span></dt>
+    <dd>
+      Either the duty cycle or in an error case the error message.
+    </dd>
+    <dt>msg.pwmPin<span class="property-type">string</span></dt>
+    <dt>msg.frequency<span class="property-type">number</span></dt>
+    <dt>msg.polarity<span class="property-type">string</span></dt>
+    <dt>msg.enabled<span class="property-type">boolean</span></dt>
+  </dl>
+  <h3>References</h3>
+  <ul>
+    <li>
+      <a href="https://github.com/edgepi-cloud/node-red-edgepi-pwm">GitHub</a>
+      -the node's github repository
+    </li>
+  </ul>
+</script>
