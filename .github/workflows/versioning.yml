@@ -1,0 +1,70 @@
+name: Update Version on Dev Push
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  update-version:
+    if: ${{contains(toJSON(github.event.head_commit.message), 'Bump version') == false}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get version type
+        id: version_type
+        run: |
+          if [[ ${{ contains(toJSON(github.event.head_commit.message), 'major') }} == true ]]; then
+              echo "VERSION_TYPE=major" >> $GITHUB_OUTPUT
+          elif [[ ${{ contains(toJSON(github.event.head_commit.message), 'minor') }} == true ]]; then
+              echo "VERSION_TYPE=minor" >> $GITHUB_OUTPUT
+          else
+              echo "VERSION_TYPE=patch" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14 # Adjust this to your desired Node.js version
+
+      - name: Set Git user information
+        run: |
+          git config --local user.name "bot-edgepi"
+          git config --local user.email "120603722+bot-edgepi@users.noreply.github.com"
+
+      - name: Set versioned branch name
+        id: branch-name
+        run: |
+          echo "version-$(date +'%Y%m%d%H%M%S')-$(openssl rand -hex 4)" > branch-name.txt
+          echo "BRANCH_NAME=$(cat branch-name.txt)" >> $GITHUB_ENV
+
+      - name: Checkout new branch
+        run: |
+          branch_name=$(cat branch-name.txt)
+          git checkout -b $branch_name
+          git push --set-upstream origin $branch_name
+
+      - name: Bump version
+        run: |
+          npm version ${{ steps.version_type.outputs.VERSION_TYPE }} --force
+
+      - name: Push to the dev branch
+        run: |
+          branch_name=$(cat branch-name.txt)
+          version=$(cat package.json | jq -r '.version')
+          git add .
+          git commit -m "Bump version to $version"
+          git push --follow-tags
+          git push --force origin "$branch_name":dev
+
+      - name: Delete versioned branch
+        run: |
+          branch_name=$(cat branch-name.txt)
+          git checkout dev
+          git branch -D $branch_name
+          git push origin --delete $branch_name
