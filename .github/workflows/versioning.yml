@@ -13,9 +13,9 @@ jobs:
       - name: Get version type
         id: version_type
         run: |
-          if [[ ${{ contains(toJSON(github.event.head_commit.message), 'major') }} == true ]]; then
+          if [[ ${{ contains(toJSON(github.event.head_commit.message), 'bump_major') }} == true ]]; then
               echo "VERSION_TYPE=major" >> $GITHUB_OUTPUT
-          elif [[ ${{ contains(toJSON(github.event.head_commit.message), 'minor') }} == true ]]; then
+          elif [[ ${{ contains(toJSON(github.event.head_commit.message), 'bump_minor') }} == true ]]; then
               echo "VERSION_TYPE=minor" >> $GITHUB_OUTPUT
           else
               echo "VERSION_TYPE=patch" >> $GITHUB_OUTPUT
