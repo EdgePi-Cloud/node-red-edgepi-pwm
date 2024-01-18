@@ -251,7 +251,11 @@
   <h3>Properties</h3>
   <dl class="message-properties">
     <dt>RPC Server</dt>
-    <dd>The connection to your EdgePi's RPC Server.</dd>
+    <dd>
+      The connection to your EdgePi's RPC Server. Use <strong>Local</strong> if
+      node-red is running on EdgePi. Otherwise use the
+      <strong>Network</strong> option and enter EdgePi's IP address / Hostname.
+    </dd>
     <dt>PWM</dt>
     <dd>The PWM Pin to configure on the EdgePi.</dd>
     <dt>State</dt>
@@ -266,9 +270,7 @@
   <h3>Inputs</h3>
   <dl class="message-properties">
     <dt>msg.payload<span class="property-type">number</span></dt>
-    <dd>
-      The duty cycle.
-    </dd>
+    <dd>The duty cycle.</dd>
     <dt>msg.frequency<span class="property-type">number</span></dt>
     <dt>msg.polarity<span class="property-type">string</span></dt>
     <dt>msg.enabled<span class="property-type">boolean</span></dt>
@@ -277,9 +279,7 @@
   <p>Values of successfully configured properties.</p>
   <dl class="message-properties">
     <dt>msg.payload<span class="property-type">number</span></dt>
-    <dd>
-      Either the duty cycle or in an error case the error message.
-    </dd>
+    <dd>Either the duty cycle or in an error case the error message.</dd>
     <dt>msg.pwmPin<span class="property-type">string</span></dt>
     <dt>msg.frequency<span class="property-type">number</span></dt>
     <dt>msg.polarity<span class="property-type">string</span></dt>
