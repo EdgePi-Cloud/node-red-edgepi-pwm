@@ -20,10 +20,8 @@
       return this.name || "pwm";
     },
     oneditprepare: function () {
-      const configTransportSelect = document.getElementById(
-        "node-input-transport"
-      );
-      const tcpField = document.querySelector(".form-row.tcp");
+      const transportType = document.getElementById("node-input-transport");
+      const tcpTransportInputs = document.querySelector(".form-row.tcp");
       const pwmPin = document.getElementById("node-input-pwmPin");
       const PWM1 = document.getElementById("node-input-PWM1");
       const PWM2 = document.getElementById("node-input-PWM2");
@@ -53,12 +51,12 @@
       }
 
       function updateEditor() {
-        tcpField.style.display =
-          configTransportSelect.value === "Network" ? "flex" : "none";
+        tcpTransportInputs.style.display =
+          transportType.value === "Network" ? "flex" : "none";
       }
 
       updateEditor();
-      configTransportSelect.addEventListener("change", updateEditor);
+      transportType.addEventListener("change", updateEditor);
       PWM1.addEventListener("change", updateEditor);
       PWM2.addEventListener("change", updateEditor);
       enabled.addEventListener("change", updateEditor);
