@@ -3,17 +3,26 @@ on:
   push:
     branches:
       - main
+    tags:
+      - release/*
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm publish --access public
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Release Package
+        uses: ncipollo/release-action@v1.12.0
+
+      - name: Publish Package to npm
+        run: |
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -5,7 +5,7 @@
     defaults: {
       name: { value: "" },
       transport: { value: "Local" },
-      pwmPin: { value: "PWM1" },
+      pwmPin: { value: "" },
       state: { value: "enabled" },
       frequency: { value: "" },
       dutyCycle: { value: "" },
@@ -20,10 +20,8 @@
       return this.name || "pwm";
     },
     oneditprepare: function () {
-      const configTransportSelect = document.getElementById(
-        "node-input-transport"
-      );
-      const tcpField = document.querySelector(".form-row.tcp");
+      const transportType = document.getElementById("node-input-transport");
+      const tcpTransportInputs = document.querySelector(".form-row.tcp");
       const pwmPin = document.getElementById("node-input-pwmPin");
       const PWM1 = document.getElementById("node-input-PWM1");
       const PWM2 = document.getElementById("node-input-PWM2");
@@ -53,12 +51,12 @@
       }
 
       function updateEditor() {
-        tcpField.style.display =
-          configTransportSelect.value === "Network" ? "flex" : "none";
+        tcpTransportInputs.style.display =
+          transportType.value === "Network" ? "flex" : "none";
       }
 
       updateEditor();
-      configTransportSelect.addEventListener("change", updateEditor);
+      transportType.addEventListener("change", updateEditor);
       PWM1.addEventListener("change", updateEditor);
       PWM2.addEventListener("change", updateEditor);
       enabled.addEventListener("change", updateEditor);
@@ -141,7 +139,7 @@
   </style>
 
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Name:</label>
+    <label for="node-input-name"><i class="fa fa-tag"></i>Name:</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 
@@ -251,7 +249,11 @@
   <h3>Properties</h3>
   <dl class="message-properties">
     <dt>RPC Server</dt>
-    <dd>The connection to your EdgePi's RPC Server.</dd>
+    <dd>
+      The connection to your EdgePi's RPC Server. Use <strong>Local</strong> if
+      node-red is running on EdgePi. Otherwise use the
+      <strong>Network</strong> option and enter EdgePi's IP address / Hostname.
+    </dd>
     <dt>PWM</dt>
     <dd>The PWM Pin to configure on the EdgePi.</dd>
     <dt>State</dt>
@@ -266,9 +268,7 @@
   <h3>Inputs</h3>
   <dl class="message-properties">
     <dt>msg.payload<span class="property-type">number</span></dt>
-    <dd>
-      The duty cycle.
-    </dd>
+    <dd>The duty cycle.</dd>
     <dt>msg.frequency<span class="property-type">number</span></dt>
     <dt>msg.polarity<span class="property-type">string</span></dt>
     <dt>msg.enabled<span class="property-type">boolean</span></dt>
@@ -277,9 +277,7 @@
   <p>Values of successfully configured properties.</p>
   <dl class="message-properties">
     <dt>msg.payload<span class="property-type">number</span></dt>
-    <dd>
-      Either the duty cycle or in an error case the error message.
-    </dd>
+    <dd>Either the duty cycle or in an error case the error message.</dd>
     <dt>msg.pwmPin<span class="property-type">string</span></dt>
     <dt>msg.frequency<span class="property-type">number</span></dt>
     <dt>msg.polarity<span class="property-type">string</span></dt>
