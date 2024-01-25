@@ -1,4 +1,5 @@
 # node-red-edgepi-pwm
+
 Node-Red node for EdgePi PWM
 
 Configures a PWM port on the EdgePi.
@@ -27,6 +28,7 @@ Configures a PWM port on the EdgePi.
 - **msg.enabled** `boolean`
 
 Example input configuration:
+
 ```
 msg {
   "payload": 0,
@@ -48,6 +50,7 @@ Values of successfully configured properties.
 - **msg.enabled** `boolean`
 
 Example output:
+
 ```
 msg {
   "payload": 0,

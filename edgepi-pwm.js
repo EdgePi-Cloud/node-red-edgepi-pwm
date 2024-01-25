@@ -5,25 +5,38 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     const node = this;
     const pwmPin = rpc.PWMPins[config.pwmPin];
-
     setInitialConfigs(config)
       .then((pwm) => {
         node.on("input", async function (msg, send, done) {
           node.status({ fill: "green", shape: "dot", text: "input received" });
           try {
             await updateConfigsOnInput(msg, pwm, config);
-            msg = {
-              payload: await pwm.getDutyCycle(pwmPin),
-              pwmPin: pwmPin,
-              frequency: await pwm.getFrequency(pwmPin),
-              polarity: await pwm.getPolarity(pwmPin),
-              enabled: await pwm.getEnabled(pwmPin),
-            };
+            const settings = await pwm.getSettings(pwmPin);
+              msg = {
+                payload: settings.dutyCycle,
+                pwmPin: pwmPin,
+                frequency: settings.frequency,
+                polarity: settings.polarity,
+                enabled: settings.enabled,
+              };    
+            if (msg.polarity === 0) {
+              msg.polarity = "NORMAL";
+            } else if (msg.polarity === 1) {
+              msg.polarity = "INVERSED";
+            }
+
+            if (msg.pwmPin === 0) {
+              msg.pwmPin = "PWM1";
+            } else if (msg.pwmPin === 1) {
+              msg.pwmPin = "PWM2";
+            }
           } catch (error) {
             console.error(error);
             msg.payload = error;
           }
+
           send(msg);
+
           if (done) done();
         });
 
@@ -50,17 +63,19 @@ module.exports = function (RED) {
           ? `tcp://${config.tcpAddress}:${config.tcpPort}`
           : "ipc:///tmp/edgepi.pipe";
       const configArg = {
-        pwmNum: config.pwmPin,
+        pwmNum: pwmPin,
         frequency: parseFloat(config.frequency),
         dutyCycle: parseFloat(config.dutyCycle) / 100,
         polarity: config.polarity,
       };
-
       try {
         const pwm = new rpc.PWMService(transport);
         console.info("PWM node initialized on:", transport);
         await pwm.initPwm(pwmPin);
         await pwm.setConfig(configArg);
+
+      
+
         if (config.state === "enabled") {
           await pwm.enable(pwmPin);
         } else {
@@ -90,9 +105,11 @@ module.exports = function (RED) {
         if (polarity) {
           inputConfig.polarity = rpc.Polarity[polarity];
         }
+
         // If setConfig fails, reinitialize and try again
         const maxRetries = 3;
         let attempt = 0;
+
         while (attempt < maxRetries) {
           try {
             await pwm.setConfig(inputConfig);
