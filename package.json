@@ -1,9 +1,13 @@
 {
   "name": "@edgepi-cloud/node-red-edgepi-pwm",
   "node-red": {
+    "version": ">=3.0.2",
     "nodes": {
       "edgepi-pwm": "edgepi-pwm.js"
     }
+  },
+  "engines": {
+    "node": ">=14"
   },
   "version": "1.0.1",
   "description": "Node-RED node for EdgePi PWM Module",
@@ -23,7 +27,7 @@
     "@edgepi-cloud/edgepi-rpc": "^1.1.3"
   },
   "devDependencies": {
-    "node-red": "^3.1.3"
+    "node-red": "^3.1.5"
   },
   "keywords": [
     "node-red",
