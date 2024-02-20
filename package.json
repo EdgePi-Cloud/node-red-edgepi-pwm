@@ -9,7 +9,7 @@
   "engines": {
     "node": ">=14"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Node-RED node for EdgePi PWM Module",
   "main": "index.js",
   "scripts": {},
