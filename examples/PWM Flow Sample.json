@@ -1,0 +1,99 @@
+[
+    {
+        "id": "6b17422368128e1c",
+        "type": "pwm",
+        "z": "aa7eb918109cfafe",
+        "name": "",
+        "transport": "Local",
+        "pwmPin": "PWM1",
+        "state": "enabled",
+        "frequency": "1000",
+        "dutyCycle": "50",
+        "polarity": "NORMAL",
+        "tcpAddress": "",
+        "tcpPort": "5555",
+        "x": 350,
+        "y": 760,
+        "wires": [
+            [
+                "55e4b6bb16d2344f"
+            ]
+        ]
+    },
+    {
+        "id": "e184d536901e29e5",
+        "type": "inject",
+        "z": "aa7eb918109cfafe",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 800,
+        "wires": [
+            [
+                "6b17422368128e1c"
+            ]
+        ]
+    },
+    {
+        "id": "55e4b6bb16d2344f",
+        "type": "debug",
+        "z": "aa7eb918109cfafe",
+        "name": "debug PWM output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "0759bb3c9975a1cd",
+        "type": "inject",
+        "z": "aa7eb918109cfafe",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "frequency",
+                "v": "2000",
+                "vt": "num"
+            },
+            {
+                "p": "polarity",
+                "v": "NORMAL",
+                "vt": "str"
+            },
+            {
+                "p": "enabled",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "50",
+        "payloadType": "num",
+        "x": 90,
+        "y": 840,
+        "wires": [
+            [
+                "6b17422368128e1c"
+            ]
+        ]
+    }
+]
